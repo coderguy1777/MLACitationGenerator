@@ -31,29 +31,31 @@ public class MLA {
                 AuthorName.add(this.authorname.substring(space + 1, this.authorname.length()));
             }
         }
-        mlaAuthor = AuthorName.get(1) + ", " + AuthorName.get(0);
-
-        System.out.println(mlaAuthor);
+        mlaAuthor = AuthorName.get(1) + ", " + AuthorName.get(0) + "";
         return mlaAuthor;
     }
 
-    private static void writeUsingFileWriter(String data) {
-        File file = new File("C:/Users/lolzk/FileWriter.html");
-        FileWriter fr = null;
-        try {
-            fr = new FileWriter(file);
-            fr.write(data);
-            Desktop.getDesktop().browse(file.toURI());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }finally{
-            //close resources
-            try {
-                fr.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+    public String generateMLATitle() {
+        String mla = ("") + this.title;
+        System.out.println(mla);
+        return mla;
+    }
+
+    public String generateMLABookCitation() {
+        String citationparta = "<!DOCTYPE html> \n" +
+                "<html> \n" +
+                "<head> \n" +
+                    "<meta charset=utf-8> \n" +
+                    "<title>Citations</title> \n" + 
+                "</head> \n" + 
+                "<body> \n" + 
+                    "<p> ";
+        
+        String citationpartb = generateMLAName() + ", " + generateMLATitle() + ", " + this.publishername + ", " + this.year;
+        String citationpartc = "</p> \n" + 
+                            "</body> \n" + 
+                            "</html>";
+        return citationparta + citationpartb  + citationpartc;
     }
 
 }

@@ -5,13 +5,26 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-
-import java.awt.*;
-import java.io.*;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
+import java.io.*;
+import java.awt.*;
 
 public class Main extends Application {
+    public static String test = " ";
+
+    
+    public static void writeUsingFileWriter(String data) {
+        File file = new File("Filetest.html");
+        FileWriter fr = null;
+        try {
+            fr = new FileWriter(file);
+            fr.write(data);
+            fr.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -22,7 +35,7 @@ public class Main extends Application {
          */
 
         // new citation button
-        Button bookCitation = new Button("Generate an MLA Citation for a Book");
+        Button bookCitation = new Button("Generate MLA Citations for Books");
         bookCitation.setMaxWidth(200);
         bookCitation.setMaxHeight(50);
         bookCitation.setFont(new Font("Arial", 10));
@@ -31,7 +44,7 @@ public class Main extends Application {
         parserStage.getChildren().add(bookCitation);
 
         // citation for site
-        Button siteCitation = new Button("Generate an MLA Citation for a Website");
+        Button siteCitation = new Button("Generate MLA Citations for Websites");
         siteCitation.setMaxWidth(200);
         siteCitation.setMaxHeight(50);
         siteCitation.setFont(new Font("Arial", 10));
@@ -108,7 +121,11 @@ public class Main extends Application {
 
         MLA mla = new MLA(2002, "Hello", "Steve", "Steve Rogers", "Hello");
         mla.generateMLAName();
+        mla.generateMLATitle();
 
+        String mlaCitation = mla.generateMLABookCitation();
+        writeUsingFileWriter(mlaCitation);
+        System.out.println(mlaCitation);
 
         Scene scene = new Scene(parserStage, 800, 600);
         scene.setFill(Color.rgb(188, 129, 98));
@@ -119,8 +136,6 @@ public class Main extends Application {
         primaryStage.setResizable(false);
         primaryStage.show();
     }
-
-
 
     public static void main(String[]args) {
         launch(args);
