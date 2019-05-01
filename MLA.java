@@ -5,11 +5,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class MLA {
-    private String authorname;
-    private int year;
-    private String publishername;
-    private String title;
-    private String url;
+    public String authorname;
+    public int year;
+    public String publishername;
+    public String title;
+    public String url;
 
     public MLA(int year, String title, String publishername, String authorname, String url) {
         this.year = year;
@@ -28,7 +28,7 @@ public class MLA {
             if(this.authorname.charAt(i) == ' ') {
                 space = i;
                 AuthorName.add(this.authorname.substring(0, space));
-                AuthorName.add(this.authorname.substring(space + 1, this.authorname.length()));
+                AuthorName.add("" + this.authorname.substring(space + 1, this.authorname.length()));
             }
         }
         mlaAuthor = AuthorName.get(1) + ", " + AuthorName.get(0) + "";
@@ -36,26 +36,34 @@ public class MLA {
     }
 
     public String generateMLATitle() {
-        String mla = ("") + this.title;
-        System.out.println(mla);
-        return mla;
+        return ("") + this.title;
     }
 
     public String generateMLABookCitation() {
-        String citationparta = "<!DOCTYPE html> \n" +
-                "<html> \n" +
-                "<head> \n" +
-                    "<meta charset=utf-8> \n" +
-                    "<title>Citations</title> \n" + 
-                "</head> \n" + 
-                "<body> \n" + 
-                    "<p> ";
-        
-        String citationpartb = generateMLAName() + ", " + generateMLATitle() + ", " + this.publishername + ", " + this.year;
-        String citationpartc = "</p> \n" + 
-                            "</body> \n" + 
-                            "</html>";
-        return citationparta + citationpartb  + citationpartc;
-    }
+        // local variables for citation method.
+        ArrayList<String>Citation = new ArrayList<>();
+        String citedBookMla = "";
+        String indent = null;
 
+        // Citation parts
+        String citationparta = "<!DOCTYPE html> \n" + "<html> \n" + "<head> \n" + "<meta charset=utf-8> \n" + "<title>Citations</title> \n" + "</head> \n" + "<body> \n" + "<p>";
+        String citationpartb = generateMLAName() + ". " + "\"<i>" + generateMLATitle() + "</i>\"" + ". " + this.publishername + ", " + this.year + ".";
+        String temp = citationpartb;
+        if(citationpartb.length() >= 100) {
+            indent = citationpartb.substring(80, citationpartb.length() - 1);
+            citationpartb = temp.substring(0, 80)  + "<br>" + "&nbsp&nbsp&nbsp&nbsp" + indent;
+        }
+
+        String citationpartc = "</p> \n" + "</body> \n" + "</html>";
+
+        // makes citation for the book
+        Citation.add(citationparta);
+        Citation.add(citationpartb);
+        Citation.add(citationpartc);
+        for(String i: Citation) {
+            citedBookMla += i + " ";
+        }
+
+        return citedBookMla;
+    }
 }

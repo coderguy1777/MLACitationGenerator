@@ -9,13 +9,16 @@ import javafx.stage.Stage;
 import javafx.scene.control.Label;
 import java.io.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class Main extends Application {
     public static String test = " ";
+    public ArrayList<String>testt = new ArrayList<>();
+    public static String author, sourceurl, publisher = "";
+    public static int publishyear = 0;
 
-    
     public static void writeUsingFileWriter(String data) {
-        File file = new File("Filetest.html");
+        File file = new File("src/Filetest.html");
         FileWriter fr = null;
         try {
             fr = new FileWriter(file);
@@ -57,7 +60,7 @@ public class Main extends Application {
          */
 
         // Author textfield
-        TextField parta = new TextField();
+        TextField parta = new TextField("Author");
         parta.setMaxWidth(150);
         parta.setMaxHeight(25);
         parta.setEditable(true);
@@ -65,7 +68,7 @@ public class Main extends Application {
         parserStage.getChildren().add(parta);
 
         // Publisher textfield
-        TextField partb = new TextField();
+        TextField partb = new TextField("Publisher");
         partb.setMaxHeight(25);
         partb.setMaxWidth(150);
         partb.setEditable(true);
@@ -74,7 +77,7 @@ public class Main extends Application {
         parserStage.getChildren().add(partb);
 
         // Year source was published
-        TextField partc = new TextField();
+        TextField partc = new TextField("Year of Publishing");
         partc.setMaxHeight(25);
         partc.setMaxWidth(150);
         partc.setEditable(true);
@@ -90,6 +93,29 @@ public class Main extends Application {
         partd.setTranslateY(-160);
         partd.setEditable(true);
         parserStage.getChildren().add(partd);
+
+        // prepares info for citation
+        bookCitation.setOnAction(actionEvent -> {
+            parta.setEditable(false);
+            partb.setEditable(false);
+            partc.setEditable(false);
+            partd.setEditable(false);
+            String author, sourceurl, publisher = "";
+            int publishyear = 0;
+            if(!(parta.getText().isEmpty())) {
+                author = parta.getText();
+            }
+
+            if(!(partb.getText().isEmpty())) {
+                publisher = partb.getText();
+            }
+
+            if(!(partc.getText().isEmpty())) {
+                publishyear = new Integer(partc.getText());
+            }
+
+
+        });
 
         // label for author source
         Label partA = new Label("Author of source");
@@ -119,7 +145,7 @@ public class Main extends Application {
         partD.setTranslateY(-185);
         parserStage.getChildren().add(partD);
 
-        MLA mla = new MLA(2002, "Hello", "Steve", "Steve Rogers", "Hello");
+        MLA mla = new MLA(2019, "Air Force Leader: Artificial Intelligence Could Help Monitor Social Media", "The New York Times", "John Markoff", "https://www.nytimes.com/2019/04/25/obituaries/nils-nilssen-dead.html?rref=collection%2Ftimestopic%2FArtificial%20Intelligence&action=click&contentCollection=timestopics&region=stream&module=stream_unit&version=latest&contentPlacement=1&pgtype=collection");
         mla.generateMLAName();
         mla.generateMLATitle();
 
@@ -138,6 +164,8 @@ public class Main extends Application {
     }
 
     public static void main(String[]args) {
+        String test = "The Impact of Global Warming in North America. Global Warming: Early Signs. 1999. ";
+        System.out.println(test.length());
         launch(args);
     }
 }
