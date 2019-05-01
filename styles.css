@@ -5,3 +5,11 @@
 .button:hover {
     -fx-background-color: black;
 }
+
+.body {
+    -fx-background-color: black;
+}
+
+#Color1 {
+    -fx-background-color: teal;
+}
