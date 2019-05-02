@@ -12,10 +12,7 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class Main extends Application {
-    public static String test = " ";
-    public ArrayList<String>testt = new ArrayList<>();
-    public static String author, sourceurl, publisher = "";
-    public static int publishyear = 0;
+    public static ArrayList<MLA>citations = new ArrayList<>();
 
     public static void writeUsingFileWriter(String data) {
         File file = new File("src/Filetest.html");
@@ -86,7 +83,7 @@ public class Main extends Application {
         parserStage.getChildren().add(partc);
 
         // Title of the source.
-        TextField partd = new TextField();
+        TextField partd = new TextField("Source title");
         partd.setMaxHeight(25);
         partd.setMaxWidth(150);
         partd.setTranslateX(-250);
@@ -100,7 +97,10 @@ public class Main extends Application {
             partb.setEditable(false);
             partc.setEditable(false);
             partd.setEditable(false);
-            String author, sourceurl, publisher = "";
+            String author = "  ";
+            String sourcetitle = " ";
+            String sourceurl = " ";
+            String publisher = "";
             int publishyear = 0;
             if(!(parta.getText().isEmpty())) {
                 author = parta.getText();
@@ -114,9 +114,13 @@ public class Main extends Application {
                 publishyear = new Integer(partc.getText());
             }
 
+            if(!(partd.getText().isEmpty())) {
+                sourcetitle = partd.getText();
+            }
+            citations.add(new MLA(publishyear, sourcetitle, publisher, author, sourceurl));
+            System.out.println(citations.get(0).generateMLABookCitation());
 
         });
-
         // label for author source
         Label partA = new Label("Author of source");
         partA.setFont(new Font("Arial", 15));
@@ -164,8 +168,6 @@ public class Main extends Application {
     }
 
     public static void main(String[]args) {
-        String test = "The Impact of Global Warming in North America. Global Warming: Early Signs. 1999. ";
-        System.out.println(test.length());
         launch(args);
     }
 }
