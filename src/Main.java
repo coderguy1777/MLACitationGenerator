@@ -22,8 +22,8 @@ public class Main extends Application {
     private String test = "";
     private String finalcite = "";
     public HTMLEncoder encoder;
-
-
+    
+    // writes the final cited source for the user
     private static void citationFileWriter(String data) {
         File file = new File("Sources.html");
         FileWriter fr = null;
