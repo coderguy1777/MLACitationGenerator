@@ -1,5 +1,8 @@
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -7,41 +10,36 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
-import java.io.*;
 import java.awt.*;
+import java.io.*;
+import java.net.URI;
 import java.util.ArrayList;
 
 public class Main extends Application {
-    public static ArrayList<MLA>bookCitations = new ArrayList<>();
-    public static ArrayList<MLA>webCitations = new ArrayList<>();
-    public static ArrayList<String>HTMLBooks = new ArrayList<>();
-    public static ArrayList<String>HTMLWeb = new ArrayList<>();
-    public static int currentCitations = 0;
+    private static ArrayList<String>tester = new ArrayList<>();
+    private static final String tags1 = "<!DOCTYPE html> \n" + "<html> \n" + "<head> \n" + "<meta charset=utf-8> \n" + "<title>Citations</title> \n" + "</head> \n" + "<body> \n" + "<p>";
+    private static final String tags2 = "</p> \n" + "</body> \n" + "</html>";
+    private String test = "";
+    private String finalcite = "";
+    public HTMLEncoder encoder;
 
-    public static void citeSource(MLA a) {
-        if(a.sourceurl == ' ') {
-            bookCitations.add(a);
-            HTMLBooks.add(a.generateMLABookCitation());
-        } else if(a.sourceurl != ' ') {
-            webCitations.add(a);
-            HTMLWeb.add(a);
-        }
-    }
 
-    public static void writeUsingFileWriter(String data) {
-        File file = new File("Filetest" + currentCitations + ".html");
+    private static void citationFileWriter(String data) {
+        File file = new File("Sources.html");
         FileWriter fr = null;
         try {
             fr = new FileWriter(file);
             fr.write(data);
             fr.close();
+            URI oURI = (file.toURI());
+            Desktop.getDesktop().browse(oURI);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         // scene stackpane for parser
         StackPane parserStage = new StackPane();
         /*
@@ -55,7 +53,27 @@ public class Main extends Application {
         bookCitation.setFont(new Font("Arial", 10));
         bookCitation.setTranslateX(200);
         bookCitation.setTranslateY(-85.0);
+        bookCitation.setVisible(false);
         parserStage.getChildren().add(bookCitation);
+
+        // checks again
+        Button anotherCitationBook = new Button("Another Citation?");
+        anotherCitationBook.setMaxWidth(200);
+        anotherCitationBook.setMaxHeight(50);
+        anotherCitationBook.setFont(new Font("Arial", 15));
+        anotherCitationBook.setTranslateX(200);
+        anotherCitationBook.setTranslateY(85.0);
+        anotherCitationBook.setVisible(false);
+        parserStage.getChildren().add(anotherCitationBook);
+
+        // prints sources
+        Button printBookCited = new Button("Print your MLA Book Citations");
+        printBookCited.setMaxWidth(200);
+        printBookCited.setMaxHeight(50);
+        printBookCited.setFont(new Font("Arial", 10));
+        printBookCited.setTranslateX(200);
+        printBookCited.setVisible(false);
+        parserStage.getChildren().add(printBookCited);
 
         // citation for site
         Button siteCitation = new Button("Generate MLA Citations for Websites");
@@ -64,6 +82,7 @@ public class Main extends Application {
         siteCitation.setFont(new Font("Arial", 10));
         siteCitation.setTranslateX(200);
         siteCitation.setTranslateY(-5.0);
+        siteCitation.setVisible(false);
         parserStage.getChildren().add(siteCitation);
 
         /*
@@ -75,6 +94,7 @@ public class Main extends Application {
         parta.setMaxWidth(150);
         parta.setMaxHeight(25);
         parta.setEditable(true);
+        parta.setVisible(false);
         parta.setTranslateX(-250);
         parserStage.getChildren().add(parta);
 
@@ -83,6 +103,7 @@ public class Main extends Application {
         partb.setMaxHeight(25);
         partb.setMaxWidth(150);
         partb.setEditable(true);
+        partb.setVisible(false);
         partb.setTranslateX(-250);
         partb.setTranslateY(80);
         parserStage.getChildren().add(partb);
@@ -92,6 +113,7 @@ public class Main extends Application {
         partc.setMaxHeight(25);
         partc.setMaxWidth(150);
         partc.setEditable(true);
+        partc.setVisible(false);
         partc.setTranslateX(-250);
         partc.setTranslateY(-80);
         parserStage.getChildren().add(partc);
@@ -103,45 +125,132 @@ public class Main extends Application {
         partd.setTranslateX(-250);
         partd.setTranslateY(-160);
         partd.setEditable(true);
+        partd.setVisible(false);
         parserStage.getChildren().add(partd);
 
-        // prepares info for citation
+        /*
+            website text input fields
+         */
 
-        bookCitation.setOnAction(actionEvent -> {
-            String author = "  ";
-            String sourcetitle = " ";
-            String sourceurl = " ";
-            String publisher = "";
-            int publishyear = 0;
-            parta.setEditable(false);
-            partb.setEditable(false);
-            partc.setEditable(false);
-            partd.setEditable(false);
-            if(!(parta.getText().isEmpty())) {
-                author = parta.getText();
-            }
+        // site publisher
+        TextField webSitePublisher = new TextField("Site publisher");
+        webSitePublisher.setMaxHeight(25);
+        webSitePublisher.setMaxWidth(150);
+        webSitePublisher.setEditable(true);
+        webSitePublisher.setVisible(false);
+        webSitePublisher.setTranslateX(-250);
+        webSitePublisher.setTranslateY(80);
+        parserStage.getChildren().add(webSitePublisher);
 
-            if(!(partb.getText().isEmpty())) {
-                publisher = partb.getText();
-            }
+        // article or source author
+        TextField siteArticleAuthor = new TextField("Sources Author");
+        siteArticleAuthor.setMaxWidth(150);
+        siteArticleAuthor.setMaxHeight(25);
+        siteArticleAuthor.setTranslateX(-250);
+        siteArticleAuthor.setEditable(true);
+        siteArticleAuthor.setVisible(false);
+        parserStage.getChildren().add(siteArticleAuthor);
 
-            if(!(partc.getText().isEmpty())) {
-                publishyear = new Integer(partc.getText());
-            }
+        // website url
+        TextField siteUrl = new TextField("Site Link");
+        siteUrl.setMaxWidth(150);
+        siteUrl.setMaxHeight(25);
+        siteUrl.setTranslateX(-250);
+        siteUrl.setTranslateY(160);
+        siteUrl.setEditable(true);
+        siteUrl.setVisible(false);
+        parserStage.getChildren().add(siteUrl);
 
-            if(!(partd.getText().isEmpty())) {
-                sourcetitle = partd.getText();
+        // source site article
+        TextField sourceTitle = new TextField("Source Title");
+        sourceTitle.setMaxWidth(150);
+        sourceTitle.setMaxHeight(25);
+        sourceTitle.setTranslateX(-250);
+        sourceTitle.setTranslateY(-160);
+        sourceTitle.setEditable(true);
+        sourceTitle.setVisible(false);
+        parserStage.getChildren().add(sourceTitle);
+
+        // year of publishing for the article
+        TextField yearPublished = new TextField("Date of Publishing");
+        yearPublished.setMaxWidth(150);
+        yearPublished.setMaxHeight(25);
+        yearPublished.setTranslateX(-250);
+        yearPublished.setTranslateY(-80);
+        yearPublished.setEditable(true);
+        yearPublished.setVisible(false);
+
+
+        // information from textfields taken to site
+        bookCitation.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                String finalsrc = " ";
+                String author = "  ";
+                String sourcetitle = " ";
+                String sourceurl = " ";
+                String publisher = "";
+                int publishyear = 0;
+                parta.setEditable(false);
+                partb.setEditable(false);
+                partc.setEditable(false);
+                partd.setEditable(false);
+                if (!(parta.getText().isEmpty())) {
+                    author = parta.getText();
+                }
+
+                if (!(partb.getText().isEmpty())) {
+                    publisher = partb.getText();
+                }
+
+                if (!(partc.getText().isEmpty())) {
+                    publishyear = new Integer(partc.getText());
+                }
+
+                if (!(partd.getText().isEmpty())) {
+                    sourcetitle = partd.getText();
+                }
+                MLA Cited = new MLA(publishyear, sourcetitle, publisher, author, sourceurl);
+                anotherCitationBook.setVisible(true);
+                test += Cited.generateptags() + '\n';
+                if (test.length() > 0) {
+                    System.out.println(test);
+                    tester.add(test);
+                }
+                printBookCited.setVisible(true);
+                printBookCited.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        citationFileWriter(tags1 + test + tags2);
+                    }
+                });
             }
-            MLA Cited = new MLA(publishyear, sourcetitle, publisher, author, sourceurl);
-            currentCitations++;
-            System.out.println(Cited.generateMLABookCitation());
         });
 
-        // label for author source
+        anotherCitationBook.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                parta.setText("Author");
+                partb.setText("Publisher");
+                partc.setText("Year of Publishing");
+                partd.setText("Source Title");
+                parta.setEditable(true);
+                partb.setEditable(true);
+                partc.setEditable(true);
+                partd.setEditable(true);
+            }
+        });
+
+        /*
+          LABELS FOR CITING A BOOK SOURCE IN MLA FOR THE
+          PROGRAM.
+        */
+        // Label for author source
         Label partA = new Label("Author of source");
         partA.setFont(new Font("Arial", 15));
         partA.setTranslateX(-250);
         partA.setTranslateY(-25);
+        partA.setVisible(false);
         parserStage.getChildren().add(partA);
 
         // label for published of source
@@ -149,6 +258,7 @@ public class Main extends Application {
         partB.setFont(new Font("Arial", 15));
         partB.setTranslateX(-250);
         partB.setTranslateY(55);
+        partB.setVisible(false);
         parserStage.getChildren().add(partB);
 
         // label for source publish year
@@ -156,6 +266,7 @@ public class Main extends Application {
         partC.setFont(new Font("Arial", 15));
         partC.setTranslateX(-250);
         partC.setTranslateY(-105);
+        partC.setVisible(false);
         parserStage.getChildren().add(partC);
 
         // label for source title
@@ -163,15 +274,28 @@ public class Main extends Application {
         partD.setFont(new Font("Arial", 15));
         partD.setTranslateX(-250);
         partD.setTranslateY(-185);
+        partD.setVisible(false);
         parserStage.getChildren().add(partD);
 
-        MLA mla = new MLA(2019, "Air Force Leader: Artificial Intelligence Could Help Monitor Social Media", "The New York Times", "John Markoff", "https://www.nytimes.com/2019/04/25/obituaries/nils-nilssen-dead.html?rref=collection%2Ftimestopic%2FArtificial%20Intelligence&action=click&contentCollection=timestopics&region=stream&module=stream_unit&version=latest&contentPlacement=1&pgtype=collection");
-        mla.generateMLAName();
-        mla.generateMLATitle();
+        // choice buttons
+        Button bookCite = new Button("Cite a book in MLA");
+        bookCite.setMaxHeight(50);
+        bookCite.setMaxWidth(200);
+        bookCite.setFont(new Font("Arial", 10));
+        parserStage.getChildren().add(bookCite);
 
-        String mlaCitation = mla.generateMLABookCitation();
-        writeUsingFileWriter(mlaCitation);
-        System.out.println(mlaCitation);
+        bookCite.setOnAction(event -> {
+            bookCite.setVisible(false);
+            bookCitation.setVisible(true);
+            parta.setVisible(true);
+            partb.setVisible(true);
+            partc.setVisible(true);
+            partd.setVisible(true);
+            partA.setVisible(true);
+            partB.setVisible(true);
+            partC.setVisible(true);
+            partD.setVisible(true);
+        });
 
         Scene scene = new Scene(parserStage, 800, 600);
         scene.setFill(Color.rgb(188, 129, 98));
@@ -183,7 +307,7 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-    public static void main(String[]args) {
-    
+    public static void main(String[] args) {
         launch(args);
     }
+}

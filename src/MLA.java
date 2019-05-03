@@ -1,7 +1,3 @@
-import java.awt.*;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class MLA {
@@ -10,8 +6,9 @@ public class MLA {
     public String publishername;
     public String title;
     public String url;
+    HTMLEncoder sa = new HTMLEncoder();
 
-    public MLA(int year, String title, String publishername, String authorname, String url) {
+    MLA(int year, String title, String publishername, String authorname, String url) {
         this.year = year;
         this.title = title;
         this.publishername = publishername;
@@ -22,17 +19,18 @@ public class MLA {
     public String generateMLAName() {
         String mlaAuthor = "";
         int space = 0;
-        ArrayList<String>AuthorName = new ArrayList<>();
 
         for(int i = 0; i < this.authorname.length(); i++) {
             if(this.authorname.charAt(i) == ' ') {
                 space = i;
-                AuthorName.add(this.authorname.substring(0, space));
-                AuthorName.add("" + this.authorname.substring(space + 1, this.authorname.length()));
             }
         }
         mlaAuthor = this.authorname.substring(space + 1, this.authorname.length()) + ", " + this.authorname.substring(0, space);
         return mlaAuthor;
+    }
+
+    public String generateptags() {
+        return  sa.ptag() + generateMLAName() + ". " + "\"<i>" + generateMLATitle() + "</i>\"" + ". " + this.publishername + ", " + this.year + "." + sa.endptag();
     }
 
     public String generateMLATitle() {
@@ -43,17 +41,16 @@ public class MLA {
         // local variables for citation method.
         ArrayList<String>Citation = new ArrayList<>();
         String citedBookMla = "";
-        String indent = null;
+        String indent = "";
 
         // Citation parts
         String citationparta = "<!DOCTYPE html> \n" + "<html> \n" + "<head> \n" + "<meta charset=utf-8> \n" + "<title>Citations</title> \n" + "</head> \n" + "<body> \n" + "<p>";
-        String citationpartb = generateMLAName() + ". " + "\"<i>" + generateMLATitle() + "</i>\"" + ". " + this.publishername + ", " + this.year + ".";
+        String citationpartb = sa.ptag() + generateMLAName() + ". " + "\"<i>" + generateMLATitle() + "</i>\"" + ". " + this.publishername + ", " + this.year + "." + sa.endptag();
         String temp = citationpartb;
         if(citationpartb.length() >= 100) {
             indent = citationpartb.substring(80, citationpartb.length() - 1);
             citationpartb = temp.substring(0, 80)  + "<br>" + "&nbsp&nbsp&nbsp&nbsp" + indent;
         } else {
-            indent = indent;
             citationpartb = temp;
         }
 
@@ -83,8 +80,8 @@ public class MLA {
         String citationpartc = "</p> \n" + "</body> \n" + "</html>";
 
         temp = citationb;
-        if(citationpartb.length() >= 100) {
-            indent = citationpartb.substring(80, citationpartb.length() - 1);
+        if(citationb.length() >= 100) {
+            indent = citationb.substring(80, citationb.length() - 1);
             citationb = temp.substring(0, 80)  + "<br>" + "&nbsp&nbsp&nbsp&nbsp" + indent;
         } else {
             indent = indent;
@@ -94,7 +91,7 @@ public class MLA {
         WebCitation.add(citationb);
         WebCitation.add(citationpartc);
         for(String cite: WebCitation) {
-            citedSiteMLA += cite + " ";
+            citedSiteMLA += cite + '\n';
         }
         return citedSiteMLA;
 
