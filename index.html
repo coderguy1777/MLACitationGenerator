@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta content="og:description" content="Generate MLA citations in an instant">
+        <link rel="stylesheet" type="text/css" href="css/main.css">
+        <link href="https://fonts.googleapis.com/css?family=Abel&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Baloo+Da&display=swap" rel="stylesheet">
+        <title>Generate MLA Citations</title>
+    </head>
+    <body>
+    <div class="container-cover">
+        <div class="mla-site-title">
+            <h1>Make MLA Citations!</h1>
+        </div>
+    </div>
+    <div class="non-flex-container-cover">
+        <div class="mla-text-fields">
+            <input type="text" name="author-name" id="author-val" value="Author of Source">
+            <input type="text" name="source-tit" id="source-title" value="Title of source">
+            <input type="text" name="website-title" id="website-title" value="Website name">
+            <input type="text" name="contributor-name" id="contrib-name" value="Name of Contributor">
+            <input type="text" name="contributor-role" id="contrib-role" value="Role of Contributor">
+            <input type="text" name="publisher-name" id="pub-name" value="Publisher Name">
+            <input type="text" name="date-published" id="pub-date" value="Date Published">
+            <input type="text" name="site-url" id="source-url" value="Source URL">
+        </div>
+    </div>
+    <div class="container-cover">
+        <div class="mla-area">
+            <div class="box">
+                <button id = "gen-button" onclick="buttonClick()">Generate Citation</button>
+            </div>
+        </div>
+    </div>
+    <p id="citation-val"></p>
+    <script src="js/mla.js"></script>
+    <script src="js/mlagen.js"></script>
+    <script src="js/site.js"></script>
+    </body>
+</html>

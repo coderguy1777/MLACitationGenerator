@@ -1,0 +1,109 @@
+body, html{
+    background-color: gray;
+    margin: 0;
+    overflow: -moz-hidden-unscrollable;
+}
+
+.container-cover {
+    display: flex;
+    justify-content: space-around;
+}
+
+.mla-site-title {
+    display: flex;
+    justify-content: center;
+    font-family: 'Abel', sans-serif;
+    font-size: 25px;
+    font-weight: bold;
+    width: fit-content;
+    height: fit-content;
+}
+
+.mla-area {
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    width: 1000px;
+    height: 500px;
+    font-family: 'Baloo Da', cursive;
+    background-color: white;
+    margin: 0;
+    padding: 0;
+}
+
+.box {
+    width: fit-content;
+    max-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    border-radius: 5px;
+    margin: 0;
+    padding: 0;
+}
+
+input {
+    max-width: 110px;
+    height: fit-content;
+    font-size: 15px;
+}
+
+.non-flex-container-cover {
+    display: flex;
+    justify-content: center;
+}
+
+.mla-text-fields {
+    margin-top: 200px;
+    position: absolute;
+    width: fit-content;
+    height: fit-content;
+}
+
+.works-cited {
+    display: flex;
+    font-family: 'Times New Roman', sans-serif;
+    font-size: 15px;
+    font-weight: bold;
+    width: fit-content;
+    height: fit-content;
+}
+
+.cited-sources {
+    display: flex;
+    position: absolute;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: fit-content;
+    height: fit-content;
+}
+
+.source {
+    display: flex;
+    max-width: 100px;
+    height: fit-content;
+    font-family: "Times New Roman", sans-serif;
+    font-size: 12px;
+    margin-top: 5px;
+    padding: 5px;
+}
+
+#gen-button {
+    font-family: 'Baloo Da', cursive;
+    font-size: 30px;
+    width: fit-content;
+    height: fit-content;
+    outline-color: transparent;
+    background-color: transparent;
+    border-radius: 1px;
+    border-color: transparent;
+    margin-bottom: 5px;
+}
+
+#gen-button:hover {
+    background-color: gray;
+    -webkit-text-fill-color: white;
+}
+
